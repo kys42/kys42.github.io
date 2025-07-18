@@ -9,69 +9,89 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-        }
+        body { font-family: 'Noto Sans KR', sans-serif; }
     </style>
 </head>
 <body class="bg-gray-50">
     <div class="max-w-md mx-auto bg-white min-h-screen shadow-lg pb-16">
         <!-- Header -->
         <header class="p-6 bg-gray-800 text-white rounded-b-3xl">
-            <p class="text-lg text-gray-300">2025년 7월 17일</p>
+            <p class="text-lg text-gray-300">2025년 07월 17일</p>
             <h1 class="text-3xl font-bold mt-1">김민준님의 데일리 리포트</h1>
         </header>
 
         <main class="p-6 space-y-8">
-            <!-- 1. 팩트 요약: 오늘의 건강 상태 -->
+            <!-- 1. 데일리 상태 요약 -->
             <section class="p-6 bg-white rounded-2xl shadow-md border border-gray-100">
-                <h2 class="text-xl font-bold text-gray-800 mb-4">오늘의 건강 요약 📊</h2>
+                <h2 class="text-xl font-bold text-gray-800 mb-4">데일리 상태 요약 📊</h2>
                 <div class="text-center mb-6">
-                    <p class="text-gray-600">오늘의 체중</p>
-                    <p class="text-5xl font-bold text-gray-900 mt-1">75.2<span class="text-2xl font-normal">kg</span></p>
-                    <p class="text-md font-semibold text-blue-500 mt-2">어제보다 0.3kg 감량했어요! 🎉</p>
+                    <p class="text-gray-600">현재 체중</p>
+                    <p class="text-5xl font-bold text-gray-900 mt-1">75.7<span class="text-2xl font-normal">kg</span></p>
+                    <p class="text-md font-semibold text-blue-500 mt-2">일주일 전 대비 0.3kg 감량했어요! 🎉</p>
                 </div>
-                
-                <div>
+                <div class="mb-6">
                     <p class="text-sm font-bold text-gray-500 mb-2 text-center">최근 7일 체중 변화</p>
-                    <div class="relative h-48">
+                    <div class="relative h-40">
                         <canvas id="weightChart"></canvas>
+                    </div>
+                </div>
+                <!-- 루틴 달성도 -->
+                <div>
+                    <h3 class="font-bold text-gray-700 mb-3 text-center">어제의 루틴 달성도</h3>
+                    <div class="bg-purple-50 p-4 rounded-lg">
+                        <div class="flex items-center justify-between">
+                            <span class="font-semibold text-purple-800">달성률: 83%</span>
+                            <span class="text-sm text-purple-700">5 / 6개 완료</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                            <div class="bg-purple-600 h-2.5 rounded-full" style="width: 83%"></div>
+                        </div>
+                        <p class="text-sm text-purple-700 mt-3">놓친 '8시간 수면' 루틴 하나를 제외하고 모두 달성하셨네요! 기록과 운동 습관이 정말 잘 잡혀가고 있어요.</p>
                     </div>
                 </div>
             </section>
 
-            <!-- 2. 원인 분석: 라이프로그 인사이트 -->
+            <!-- 2. 어제의 라이프로그 기록 -->
             <section class="p-6 bg-white rounded-2xl shadow-md border border-gray-100">
-                <h2 class="text-xl font-bold text-gray-800 mb-4">라이프로그 인사이트 💡</h2>
+                <h2 class="text-xl font-bold text-gray-800 mb-4">어제의 라이프로그 기록 📝</h2>
                 
-                <!-- 식단 분석 -->
-                <div class="mb-6">
-                    <h3 class="font-bold text-gray-700 mb-3">🍽️ 식단 패턴 분석</h3>
-                    <div class="flex items-center gap-4">
-                        <div class="w-2/5 relative h-40">
-                             <canvas id="macroChart"></canvas>
-                        </div>
-                        <div class="w-3/5 text-sm space-y-2">
-                            <p><strong class="font-semibold text-gray-800">총 섭취 칼로리:</strong> 1,850 kcal</p>
-                            <p class="text-gray-600">오늘은 단백질을 충분히 섭취하며 균형 잡힌 식사를 하셨네요. 아주 잘하셨어요!</p>
-                            <p class="text-yellow-600 bg-yellow-50 p-2 rounded-lg"><strong>개선점:</strong> 저녁 식사의 탄수화물 비중이 조금 높았어요.</p>
+                <!-- 식단 기록 -->
+                <div class="mb-4">
+                    <h3 class="font-bold text-gray-700 mb-2">🍽️ 식단 (2096 kcal)</h3>
+                    <div class="bg-gray-50 p-3 rounded-lg">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-16 h-16">
+                                <canvas id="macroChart"></canvas>
+                            </div>
+                            <div class="text-sm">
+                                <p class="text-gray-600">아침, 점심, 저녁 모든 식사를 꼼꼼하게 기록해주신 점이 훌륭해요! 특히 저녁으로 단백질이 풍부한 구운 치킨을 선택하셨네요.</p>
+                                <p class="text-yellow-600 text-xs mt-1">저녁 식사와 오후 간식의 칼로리가 다소 높았어요. 특히 롤케이크와 같은 단당류 간식은 혈당을 빠르게 높일 수 있어 주의가 필요합니다.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- 운동 기록 -->
+                <div class="mb-4">
+                    <h3 class="font-bold text-gray-700 mb-2">🏃‍♀️ 활동 (210 kcal 소모)</h3>
+                    <div class="bg-blue-50 p-3 rounded-lg">
+                        <div class="flex justify-between items-center text-sm">
+                            <span>걷기 (75분)</span>
+                            <span>7500 걸음</span>
+                        </div>
+                        <p class="text-xs text-blue-700 mt-1">꾸준히 75분간 걸으며 활동량을 유지하셨지만, 어제 섭취한 칼로리에 비하면 소모량이 다소 아쉬웠습니다.</p>
+                    </div>
+                </div>
+
+                <!-- 수면/스트레스 기록 -->
                 <div>
-                    <h3 class="font-bold text-gray-700 mb-3">🏃‍♀️ 활동량 리포트</h3>
-                    <div class="bg-blue-50 p-4 rounded-lg">
-                        <div class="flex justify-between items-center">
-                            <p class="font-semibold text-blue-800">저녁 달리기 (30분)</p>
-                            <p class="font-bold text-blue-900">-280 kcal</p>
+                    <h3 class="font-bold text-gray-700 mb-2">😴 컨디션</h3>
+                    <div class="bg-purple-50 p-3 rounded-lg">
+                        <div class="flex justify-between items-center text-sm">
+                            <span>수면 6.0시간</span>
+                            <span>스트레스 나쁨</span>
                         </div>
-                         <div class="flex justify-between items-center mt-2">
-                            <p class="font-semibold text-blue-800">오늘의 걸음수</p>
-                            <p class="font-bold text-blue-900">8,500 걸음</p>
-                        </div>
-                        <p class="text-sm text-blue-700 mt-3">꾸준한 유산소 운동이 체중 감량에 큰 도움이 되고 있어요!</p>
+                        <p class="text-xs text-purple-700 mt-1">6시간의 짧은 수면 시간이 하루 종일 높은 스트레스 수준으로 이어진 것으로 보입니다. 수면과 스트레스는 서로 깊은 관련이 있답니다.</p>
                     </div>
                 </div>
             </section>
@@ -80,29 +100,32 @@
             <section class="p-6 bg-white rounded-2xl shadow-md border border-gray-100">
                 <h2 class="text-xl font-bold text-gray-800 mb-4">AI 코치의 분석 리포트 🤖</h2>
                 <div class="space-y-4">
-                    <!-- 오늘의 분석 -->
                     <div class="p-4 bg-gray-100 rounded-lg">
                         <h3 class="font-bold text-gray-700 mb-2">📈 오늘의 분석</h3>
-                        <p class="text-sm text-gray-600">
-                            0.3kg 감량 성공! 꾸준한 저녁 달리기와 균형 잡힌 식단 덕분이에요. 특히 단백질을 충분히 섭취하신 점이 근육량 유지에 도움이 되었을 거예요.
-                        </p>
+                        <p class="text-sm text-gray-600">오늘 아침 체중이 어제보다 소폭 증가한 것은 어제의 복합적인 요인 때문으로 보여요. 특히 저녁 식사와 간식으로 섭취한 칼로리(총 2096kcal)가 활동량(소모 210kcal) 대비 높았습니다. 또한, 6시간의 짧은 수면과 '나쁨' 수준의 스트레스도 체중 정체에 영향을 미쳤을 수 있습니다.</p>
                     </div>
-                    <!-- 내일의 코칭 -->
                     <div class="p-4 bg-blue-50 rounded-lg">
-                        <h3 class="font-bold text-blue-800 mb-3">✨ 내일을 위한 맞춤 코칭</h3>
+                        <h3 class="font-bold text-blue-800 mb-3">✨ 오늘을 위한 맞춤 코칭</h3>
                         <div class="space-y-3 text-sm">
                             <div class="flex items-start gap-3">
                                 <i class="fas fa-utensils text-blue-500 mt-1"></i>
                                 <div>
                                     <strong class="text-blue-700">식단 코칭:</strong>
-                                    <p class="text-gray-700">저녁 식단은 현미밥과 닭가슴살 샐러드로 바꿔보세요. 포만감을 주면서 탄수화물은 줄이고, 단백질과 섬유질을 보충할 수 있어요.</p>
+                                    <p class="text-gray-700">어제 모든 식사를 기록해주신 점, 정말 대단해요! 오늘은 어제보다 총 섭취 칼로리를 조금 줄여보는 걸 목표로 해볼까요? 특히 저녁 식사는 800kcal 이하로 조절하고, 포만감을 위해 샐러드나 채소 스틱을 곁들여보세요.</p>
                                 </div>
                             </div>
                             <div class="flex items-start gap-3">
                                 <i class="fas fa-running text-blue-500 mt-1"></i>
                                 <div>
                                     <strong class="text-blue-700">운동 코칭:</strong>
-                                    <p class="text-gray-700">달리기 후에 10분 정도 가벼운 스트레칭이나 요가를 추가해 보세요. 근육 회복을 돕고 유연성을 높여 부상을 예방할 수 있습니다.</p>
+                                    <p class="text-gray-700">어제 75분이나 걸으면서 꾸준함을 보여주셨어요! 오늘은 걷는 중간에 5분씩 빠르게 걷는 구간을 두 번만 추가해보세요. 운동 강도를 살짝만 높여도 칼로리 소모에 훨씬 효과적이랍니다.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <i class="fas fa-bed text-blue-500 mt-1"></i>
+                                <div>
+                                    <strong class="text-blue-700">컨디션 관리:</strong>
+                                    <p class="text-gray-700">어제 '8시간 수면하기' 루틴을 놓치신 게 아쉬워요. 수면 부족이 스트레스와 체중에 미치는 영향이 크답니다. 오늘은 꼭 11시 전에는 잠자리에 들어 충분한 휴식을 취하는 것을 최우선 목표로 해보세요. 스마트폰은 잠시 멀리 두는 게 좋겠죠?</p>
                                 </div>
                             </div>
                         </div>
@@ -110,54 +133,49 @@
                 </div>
             </section>
 
-
-            <!-- 4. 행동 제안: 내일을 위한 건강 챌린지 -->
+            <!-- 4. 오늘의 건강 챌린지 -->
             <section class="p-6 bg-gradient-to-br from-blue-500 to-indigo-600 text-white rounded-2xl shadow-lg">
-                <h2 class="text-xl font-bold mb-4">내일을 위한 건강 챌린지 💪</h2>
-                
+                <h2 class="text-xl font-bold mb-4">오늘의 건강 챌린지 💪</h2>
                 <div class="space-y-3">
                     <div class="bg-white/20 p-3 rounded-lg">
                         <p class="font-bold">🎯 오늘의 데이터 기반 맞춤 목표</p>
-                        <p class="text-sm mt-1">내일 저녁은 잡곡밥으로 바꾸고, 샐러드를 곁들여 탄수화물 섭취를 조절해 보세요.</p>
+                        <p class="text-sm mt-1">오늘 저녁 식사는 800kcal 이하로! 그리고 녹색 채소 한 접시 꼭 곁들이기</p>
                     </div>
                     <div class="bg-white/20 p-3 rounded-lg">
                         <p class="font-bold">💡 건강 습관 형성 팁</p>
-                        <p class="text-sm mt-1">잠들기 1시간 전 스마트폰 사용을 멈추고 가벼운 스트레칭으로 숙면을 유도해 보세요.</p>
+                        <p class="text-sm mt-1">식사 20분 전에 미지근한 물 한 컵을 마시면 과식을 예방하고 신진대사를 촉진하는 데 도움이 됩니다.</p>
                     </div>
                 </div>
             </section>
 
-            <!-- 5. 추가 질문 섹션 (새로 추가된 부분) -->
+            <!-- 5. 추가 질문 -->
             <section class="p-6">
                 <h2 class="text-xl font-bold text-gray-800 mb-4">더 궁금한 점이 있나요? 💬</h2>
                 <div class="space-y-3">
                     <a href="#" class="flex justify-between items-center p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors w-full text-left">
-                        <span class="font-semibold text-gray-800">오늘 식단, 다른 추천 메뉴는 없을까요?</span>
+                        <span class="font-semibold text-gray-800">스트레스를 받으면 자꾸 단 음식이 당기는데 어떻게 하죠?</span>
                         <i class="fas fa-chevron-right text-gray-400"></i>
                     </a>
                     <a href="#" class="flex justify-between items-center p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors w-full text-left">
-                        <span class="font-semibold text-gray-800">체중이 정체기인 것 같아요, 어떻게 하죠?</span>
+                        <span class="font-semibold text-gray-800">저녁 약속이 많은데, 체중 관리에 유리한 외식 메뉴 좀 추천해주세요.</span>
                         <i class="fas fa-chevron-right text-gray-400"></i>
                     </a>
                 </div>
             </section>
-
         </main>
     </div>
 
     <script>
-        // Dummy Data
         const weightData = {
             labels: ['7일 전', '6일 전', '5일 전', '4일 전', '3일 전', '어제', '오늘'],
-            weights: [76.0, 76.2, 75.8, 75.9, 75.6, 75.5, 75.2]
+            weights: [76.0,76.2,75.8,75.9,75.6,75.5,75.7]
         };
 
         const macroData = {
             labels: ['탄수화물', '단백질', '지방'],
-            values: [45, 35, 20]
+            values: [48, 28, 24]
         };
 
-        // Weight Chart
         const weightCtx = document.getElementById('weightChart').getContext('2d');
         new Chart(weightCtx, {
             type: 'line',
@@ -173,15 +191,9 @@
                     borderWidth: 2
                 }]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: { y: { beginAtZero: false, grid: { display: false } }, x: { grid: { display: false } } },
-                plugins: { legend: { display: false } }
-            }
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: false, grid: { display: false } }, x: { grid: { display: false } } }, plugins: { legend: { display: false } } }
         });
 
-        // Macro Chart
         const macroCtx = document.getElementById('macroChart').getContext('2d');
         new Chart(macroCtx, {
             type: 'doughnut',
@@ -194,19 +206,8 @@
                     borderWidth: 2
                 }]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'bottom',
-                        labels: { boxWidth: 12, padding: 10, font: { size: 10 } }
-                    }
-                }
-            }
+            options: { responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: { legend: { display: false } } }
         });
     </script>
 </body>
 </html>
-

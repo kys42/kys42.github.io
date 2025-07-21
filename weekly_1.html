@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>위클리 리포트</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 차트 라벨 표시를 위한 플러그인 추가 -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body { 
+            font-family: 'Noto Sans KR', sans-serif; 
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-gray-200">
+    <div class="max-w-md mx-auto bg-slate-900 min-h-screen pb-16">
+        <!-- Header -->
+        <header class="p-6 bg-slate-900 text-white">
+            <p class="text-lg text-gray-400">2025년 7월 14일 - 7월 20일</p>
+            <h1 class="text-3xl font-bold mt-1">김민준님의 위클리 리포트</h1>
+        </header>
+
+        <main class="p-6 space-y-8">
+            <!-- 1. 주간 상태 요약 (AI 총평 통합) -->
+            <section class="p-6 bg-slate-800 rounded-2xl shadow-lg border border-slate-700">
+                <h2 class="text-xl font-bold text-gray-100 mb-4">주간 상태 요약 📊</h2>
+                <div class="flex justify-around text-center mb-6">
+                    <div>
+                        <p class="text-gray-400 text-sm">이번 주 체중 변화</p>
+                        <p class="text-4xl font-bold text-teal-400 mt-1">-0.8<span class="text-xl font-normal text-gray-300">kg</span></p>
+                    </div>
+                    <div class="border-l border-slate-600"></div>
+                    <div>
+                        <p class="text-gray-400 text-sm">주간 루틴 달성률</p>
+                        <p id="routine-percentage" class="text-4xl font-bold text-teal-400 mt-1"><span class="text-xl font-normal text-gray-300">%</span></p>
+                    </div>
+                </div>
+                <p class="text-md font-semibold text-teal-400 -mt-2 text-center">목표를 향해 꾸준히 나아가고 있어요! 👍</p>
+                
+                <div class="my-6">
+                    <p class="text-sm font-bold text-gray-400 mb-2 text-center">최근 7일 체중 변화</p>
+                    <div class="relative h-40">
+                        <canvas id="weightChart"></canvas>
+                    </div>
+                </div>
+                <!-- AI 코치 총평 -->
+                <div class="mt-6 bg-slate-700 p-4 rounded-lg">
+                    <h3 class="font-bold text-blue-400 text-md mb-2 flex items-center"><span class="text-xl mr-2">🤖</span> AI 코치 총평</h3>
+                    <p class="text-sm text-gray-200">지난 한 주간 0.8kg을 감량하며 훌륭한 성과를 거두셨습니다! 꾸준한 운동 습관이 체중 감량의 핵심이었네요. 다만, 주중의 높은 스트레스가 수면 부족으로 이어지고, 결국 주말의 식단 조절 실패에까지 영향을 미치는 연쇄 반응이 관찰되었습니다.</p>
+                </div>
+                <p class="text-xs text-blue-400 mt-3 text-center font-semibold">↓ 아래에서 더 상세한 데이터와 AI 맞춤 코칭 내용을 확인하세요!</p>
+            </section>
+
+            <!-- 2. 주간 라이프로그 인사이트 -->
+            <section class="p-6 bg-slate-800 rounded-2xl shadow-lg border border-slate-700">
+                <h2 class="text-xl font-bold text-gray-100 mb-4">주간 라이프로그 인사이트 💡</h2>
+                
+                <div class="space-y-8">
+                    <!-- 주간 루틴 달성도 -->
+                    <div>
+                        <h3 class="font-bold text-gray-100 mb-3">📅 주간 루틴 달성 현황</h3>
+                        <div class="relative h-48">
+                            <canvas id="routineChart"></canvas>
+                        </div>
+                        <div class="text-sm mt-3 bg-slate-700 p-4 rounded-lg">
+                            <p class="text-gray-200">주중에는 꾸준히 루틴을 잘 지키셨지만, 금요일과 토요일에 달성률이 다소 낮아졌네요. 특히 주말에 식사 기록 루틴을 놓치는 경향이 있었습니다.</p>
+                            <div id="routine-details" class="mt-4 border-t border-slate-600 pt-3 grid grid-cols-2 gap-x-4 text-xs">
+                                <!-- 루틴별 달성도 데이터가 여기에 동적으로 삽입됩니다. -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 식단 패턴 분석 -->
+                    <div>
+                        <h3 class="font-bold text-gray-100 mb-3">🍽️ 일별 식단 분석 (영양소)</h3>
+                         <div class="relative h-48">
+                            <canvas id="dailyMacroChart"></canvas>
+                        </div>
+                        <div class="text-sm text-gray-200 mt-3 bg-slate-700 p-3 rounded-lg">
+                            <p>주말 저녁으로 갈수록 탄수화물, 지방 섭취 비율이 늘어나는 패턴이 명확하게 보여요.</p>
+                        </div>
+                    </div>
+
+                    <!-- 주간 운동 기록 -->
+                    <div>
+                        <h3 class="font-bold text-gray-100 mb-3">💪 주간 운동 기록</h3>
+                        <div id="exercise-grid-container" class="bg-slate-700 rounded-lg p-3">
+                            <!-- JS will generate table here -->
+                        </div>
+                        <div class="text-sm text-gray-200 mt-3 bg-slate-700 p-3 rounded-lg">
+                           <p>주 5일 꾸준히 운동하신 점이 훌륭해요! 운동을 통해 안정적으로 칼로리를 소모하고 있으며, 운동한 날은 스트레스 지수가 낮아지는 긍정적인 효과도 보였습니다.</p>
+                        </div>
+                    </div>
+
+                    <!-- 주간 수면 기록 -->
+                    <div>
+                        <h3 class="font-bold text-gray-100 mb-3">🌙 주간 수면 기록</h3>
+                        <div class="relative h-48">
+                            <canvas id="sleepChart"></canvas>
+                        </div>
+                        <div class="text-sm text-gray-200 mt-3 bg-slate-700 p-3 rounded-lg">
+                            <p>주말에 수면시간이 길어지며 주중의 부족한 잠을 보충하려는 패턴이 보여요. 목요일에 수면이 부족했던 점이 아쉽네요.</p>
+                        </div>
+                    </div>
+
+                    <!-- 주간 스트레스 지수 -->
+                    <div>
+                        <h3 class="font-bold text-gray-100 mb-3">😌 주간 스트레스 지수</h3>
+                        <div class="relative h-48">
+                            <canvas id="stressChart"></canvas>
+                        </div>
+                        <div class="text-sm text-gray-200 mt-3 bg-slate-700 p-3 rounded-lg">
+                            <p>전반적으로 스트레스 관리가 잘 되고 있지만, 업무량이 많았던 목요일에 스트레스 지수가 가장 높게 나타났습니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. AI 코치의 주간 분석 리포트 -->
+            <section class="p-6 bg-slate-800 rounded-2xl shadow-lg border border-slate-700">
+                <h2 class="text-xl font-bold text-gray-100 mb-4">AI 코치의 맞춤 코칭 🎯</h2>
+                <div class="space-y-4">
+                    
+                    <!-- 코칭 메시지 1 -->
+                    <div class="p-4 bg-slate-700 rounded-lg space-y-3">
+                        <p class="font-bold text-blue-400">스트레스 관리, 주말 폭식을 막는 열쇠!</p>
+                        <div class="text-sm text-gray-200 border-l-4 border-slate-600 pl-4 space-y-3">
+                            <div>
+                                <strong class="font-semibold text-gray-100">📊 데이터 인사이트</strong>
+                                <p class="mt-1">목요일에 스트레스 지수(7점)가 가장 높았고, 그날 수면 시간은 6시간으로 주중 가장 짧았습니다. 이후 주말에 탄수화물 섭취 비율이 급증했습니다.</p>
+                            </div>
+                            <div>
+                                <strong class="font-semibold text-gray-100">🤔 왜 그랬을까요?</strong>
+                                <p class="mt-1">높은 스트레스가 수면 부족으로, 누적된 피로가 주말의 식단 조절 실패로 이어지는 '악순환'이 만들어졌을 수 있습니다.</p>
+                            </div>
+                            <div>
+                                <strong class="font-semibold text-gray-100">🎯 이렇게 해보세요!</strong>
+                                <p class="mt-1">다음 주 스트레스가 높은 날에는 저녁에 고강도 운동보다 <strong class="text-teal-400">20분 정도의 가벼운 산책이나 명상</strong>으로 심신을 이완시켜 보세요. 숙면을 돕고 주말까지 좋은 컨디션을 유지하는 '선순환'의 시작이 될 거예요.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 코칭 메시지 2 -->
+                    <div class="p-4 bg-slate-700 rounded-lg space-y-3">
+                        <p class="font-bold text-blue-400">주말 아침의 작은 성공이 하루를 바꿔요!</p>
+                         <div class="text-sm text-gray-200 border-l-4 border-slate-600 pl-4 space-y-3">
+                            <div>
+                                <strong class="font-semibold text-gray-100">📊 데이터 인사이트</strong>
+                                <p class="mt-1">금요일과 토요일에 루틴 달성률이 각각 4개, 2개로 급격히 감소했습니다.</p>
+                            </div>
+                            <div>
+                                <strong class="font-semibold text-gray-100">🤔 왜 그랬을까요?</strong>
+                                <p class="mt-1">주중에 쌓인 피로와 긴장감이 풀리면서 주말에는 생활 패턴 전체가 무너지기 쉽습니다. 특히 '식사 기록' 같은 작은 루틴이 무너지면 식단 관리도 함께 어려워지는 경향이 있습니다.</p>
+                            </div>
+                            <div>
+                                <strong class="font-semibold text-gray-100">🎯 이렇게 해보세요!</strong>
+                                <p class="mt-1">다음 주말에는 <strong class="text-teal-400">'아침 식사 후 바로 식사 기록하기'</strong> 딱 한 가지만 목표로 삼아보세요. 아침에 작은 성공 경험을 만들면, 그날 하루의 다른 건강 행동들도 실천할 동기 부여가 될 수 있습니다.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 코칭 메시지 3 -->
+                    <div class="p-4 bg-slate-700 rounded-lg space-y-3">
+                         <p class="font-bold text-blue-400">운동 쉬는 날, '적극적 회복'이 중요해요!</p>
+                         <div class="text-sm text-gray-200 border-l-4 border-slate-600 pl-4 space-y-3">
+                            <div>
+                                <strong class="font-semibold text-gray-100">📊 데이터 인사이트</strong>
+                                <p class="mt-1">화요일과 목요일은 운동을 완전히 쉬셨고, 특히 목요일에는 스트레스 지수가 가장 높았습니다.</p>
+                            </div>
+                            <div>
+                                <strong class="font-semibold text-gray-100">🤔 왜 그랬을까요?</strong>
+                                <p class="mt-1">운동을 쉬는 날은 신체 회복에 필수적이지만, 완전히 비활동적인 상태는 오히려 대사를 늦추고 스트레스 해소 기회를 놓칠 수 있습니다.</p>
+                            </div>
+                            <div>
+                                <strong class="font-semibold text-gray-100">🎯 이렇게 해보세요!</strong>
+                                <p class="mt-1">운동을 쉬는 날에는 '적극적 회복(Active Recovery)' 개념을 도입해 보세요. <strong class="text-teal-400">점심 식사 후 10분 산책</strong>이나 저녁에 가벼운 스트레칭을 하는 것만으로도 혈액순환을 돕고 스트레스를 낮춰 다음 운동 효과를 높일 수 있습니다.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 4. 다음 주 건강 챌린지 -->
+            <section class="p-6 bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-2xl shadow-lg">
+                <h2 class="text-xl font-bold mb-4">다음 주 건강 챌린지 💪</h2>
+                <div class="space-y-3">
+                    <div class="bg-white/20 p-3 rounded-lg">
+                        <p class="font-bold">🎯 다음 주 데이터 기반 맞춤 목표</p>
+                        <p class="text-sm mt-1">스트레스 높은 날, 저녁 산책으로 마무리하기!</p>
+                    </div>
+                    <div class="bg-white/20 p-3 rounded-lg">
+                        <p class="font-bold">💡 건강 습관 형성 팁</p>
+                        <p class="text-sm mt-1">잠들기 1시간 전부터는 스마트폰 화면 대신 책을 읽거나 명상 음악을 들어보세요. 블루라이트를 피하는 것만으로도 수면의 질이 크게 향상됩니다.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 5. 추가 질문 -->
+            <section class="p-6 bg-slate-800 rounded-2xl shadow-lg border border-slate-700">
+                <h2 class="text-xl font-bold text-gray-100 mb-4">더 궁금한 점이 있나요? 💬</h2>
+                <div class="space-y-3">
+                    <a href="#" class="flex justify-between items-center p-4 bg-slate-700 rounded-lg hover:bg-slate-600 transition-colors w-full text-left">
+                        <span class="font-semibold text-gray-100">주말에 식단 관리를 잘하는 팁이 있을까요?</span>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </a>
+                    <a href="#" class="flex justify-between items-center p-4 bg-slate-700 rounded-lg hover:bg-slate-600 transition-colors w-full text-left">
+                        <span class="font-semibold text-gray-100">스트레스가 높을 때 폭식을 막는 방법이 궁금해요.</span>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </a>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // Globally register the datalabels plugin and set default chart colors
+        Chart.register(ChartDataLabels);
+        Chart.defaults.color = '#E0E0E0';
+        Chart.defaults.font.family = "'Noto Sans KR', sans-serif";
+
+
+        // Common labels for the week
+        const weeklyLabels = ['월', '화', '수', '목', '금', '토', '일'];
+
+        // --- Data Initialization ---
+        const weightData = { labels: weeklyLabels, weights: [76.0, 75.8, 75.9, 75.6, 75.7, 75.5, 75.2] };
+        const routineData = { 
+            dailyCompleted: [5, 6, 5, 6, 4, 2, 3], 
+            total: 6,
+            details: [
+                { name: '🍳 아침식사', completed: 5, total: 7 },
+                { name: '🥗 점심식사', completed: 4, total: 7 },
+                { name: '🍗 저녁식사', completed: 4, total: 7 },
+                { name: '💊 영양제', completed: 7, total: 7 },
+                { name: '💪 운동', completed: 3, total: 7 },
+                { name: '🌙 수면', completed: 5, total: 7 },
+            ]
+        };
+        const dailyMacroData = { labels: weeklyLabels, carbs: [40, 45, 42, 40, 50, 55, 50], protein: [35, 30, 33, 35, 25, 20, 25], fat: [25, 25, 25, 25, 25, 25, 25] };
+        const exerciseData = [
+            { day: '월', exercises: ['헬스', '조깅'], totalMinutes: 60, totalCalories: 450, steps: 8500 },
+            { day: '화', exercises: [], totalMinutes: 0, totalCalories: 0, steps: 3200 },
+            { day: '수', exercises: ['필라테스'], totalMinutes: 50, totalCalories: 300, steps: 7800 },
+            { day: '목', exercises: [], totalMinutes: 0, totalCalories: 0, steps: 4500 },
+            { day: '금', exercises: ['헬스'], totalMinutes: 70, totalCalories: 550, steps: 9200 },
+            { day: '토', exercises: ['등산'], totalMinutes: 120, totalCalories: 800, steps: 15000 },
+            { day: '일', exercises: ['산책'], totalMinutes: 30, totalCalories: 150, steps: 6000 }
+        ];
+        const sleepData = { labels: weeklyLabels, hours: [7, 6.5, 7.5, 6, 8, 9, 7.5] };
+        const stressData = { labels: weeklyLabels, scores: [4, 5, 3, 7, 5, 2, 3] }; // Score 1-10
+
+        // --- DOM Manipulation ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Calculate and display routine percentage
+            const totalCompleted = routineData.dailyCompleted.reduce((sum, current) => sum + current, 0);
+            const totalPossible = routineData.total * 7;
+            const completionPercentage = Math.round((totalCompleted / totalPossible) * 100);
+            const percentageEl = document.getElementById('routine-percentage');
+            percentageEl.innerHTML = `${completionPercentage}<span class="text-xl font-normal text-gray-300">%</span>`;
+
+            // Populate routine details
+            const routineDetailsContainer = document.getElementById('routine-details');
+            const leftCol = document.createElement('div');
+            leftCol.className = 'space-y-2';
+            const rightCol = document.createElement('div');
+            rightCol.className = 'space-y-2';
+
+            routineData.details.forEach(routine => {
+                const detailEl = document.createElement('div');
+                detailEl.className = 'flex justify-between items-center text-gray-200';
+                detailEl.innerHTML = `<span>${routine.name}</span> <span class="font-semibold text-gray-100">${routine.completed} / ${routine.total}</span>`;
+                
+                if (routine.name.includes('식사')) {
+                    leftCol.appendChild(detailEl);
+                } else {
+                    rightCol.appendChild(detailEl);
+                }
+            });
+
+            routineDetailsContainer.appendChild(leftCol);
+            routineDetailsContainer.appendChild(rightCol);
+
+            // Populate exercise table
+            const exerciseGridContainer = document.getElementById('exercise-grid-container');
+            if (exerciseGridContainer) {
+                const table = document.createElement('div');
+                table.className = 'text-xs';
+
+                // Header Row
+                let headerHtml = '<div class="grid grid-cols-8 text-center font-bold text-sm pb-2"><div class="text-left"></div>';
+                weeklyLabels.forEach(day => headerHtml += `<div>${day}</div>`);
+                headerHtml += '</div>';
+                table.innerHTML += headerHtml;
+
+                // Data Rows
+                const createRow = (title, dataExtractor) => {
+                    let rowHtml = `<div class="grid grid-cols-8 text-center items-center border-t border-slate-600 py-2 min-h-[3.5rem]"><div class="text-left font-semibold text-gray-400">${title}</div>`;
+                    exerciseData.forEach(record => {
+                        rowHtml += `<div>${dataExtractor(record)}</div>`;
+                    });
+                    rowHtml += '</div>';
+                    return rowHtml;
+                };
+
+                table.innerHTML += createRow('운동<br>종류', record => record.exercises.length > 0 ? record.exercises.join('<br>') : '<span class="text-gray-400">-</span>');
+                table.innerHTML += createRow('운동<br>시간', record => record.totalMinutes > 0 ? `${record.totalMinutes}분` : '<span class="text-gray-400">-</span>');
+                table.innerHTML += createRow('소모<br>칼로리', record => record.totalCalories > 0 ? `<span class="font-semibold text-teal-400">${record.totalCalories} kcal</span>` : '<span class="text-gray-400">-</span>');
+                table.innerHTML += createRow('걸음<br>수', record => record.steps > 0 ? record.steps.toLocaleString() : '<span class="text-gray-400">-</span>');
+                
+                exerciseGridContainer.appendChild(table);
+            }
+
+
+            // --- Chart Initialization ---
+
+            // 1. Weight Chart (Line)
+            new Chart(document.getElementById('weightChart').getContext('2d'), {
+                type: 'line', data: { labels: weeklyLabels, datasets: [{ label: '체중(kg)', data: weightData.weights, borderColor: 'rgba(96, 165, 250, 0.8)', backgroundColor: 'rgba(96, 165, 250, 0.1)', fill: true, tension: 0.3, borderWidth: 2 }] },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: false, grid: { display: false } }, x: { grid: { color: 'rgba(255, 255, 255, 0.1)' } } }, plugins: { legend: { display: false }, datalabels: { display: false } } }
+            });
+
+            // 2. Routine Chart (Bar)
+            new Chart(document.getElementById('routineChart').getContext('2d'), {
+                type: 'bar', 
+                data: { 
+                    labels: weeklyLabels, 
+                    datasets: [{ 
+                        label: '완료한 루틴 개수', 
+                        data: routineData.dailyCompleted, 
+                        backgroundColor: 'rgba(98, 182, 203, 0.7)', 
+                        borderColor: 'rgba(98, 182, 203, 1)', 
+                        borderWidth: 1 
+                    }] 
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: routineData.total, grid: { color: 'rgba(255, 255, 255, 0.1)' } }, x: { grid: { display: false } } }, plugins: { legend: { display: false }, datalabels: { display: false } } }
+            });
+
+            // 3. Daily Macronutrient Chart (Stacked Bar)
+            new Chart(document.getElementById('dailyMacroChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: weeklyLabels,
+                    datasets: [
+                        { label: '탄수화물', data: dailyMacroData.carbs, backgroundColor: 'rgba(251, 191, 36, 0.7)' },
+                        { label: '단백질', data: dailyMacroData.protein, backgroundColor: 'rgba(59, 130, 246, 0.7)' },
+                        { label: '지방', data: dailyMacroData.fat, backgroundColor: 'rgba(239, 68, 68, 0.7)' }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: true, grid: { display: false } },
+                        y: { stacked: true, ticks: { callback: value => value + '%' }, grid: { color: 'rgba(255, 255, 255, 0.1)' } }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 15 } },
+                        datalabels: { display: false } 
+                    }
+                }
+            });
+
+            // 4. Sleep Chart (Bar)
+            new Chart(document.getElementById('sleepChart').getContext('2d'), {
+                type: 'bar', data: { labels: weeklyLabels, datasets: [{ label: '수면 시간', data: sleepData.hours, backgroundColor: 'rgba(167, 139, 250, 0.7)', borderColor: 'rgba(167, 139, 250, 1)', borderWidth: 1 }] },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { callback: value => value + '시간' }, grid: { color: 'rgba(255, 255, 255, 0.1)' } }, x: { grid: { display: false } } }, plugins: { legend: { display: false }, datalabels: { display: false } } }
+            });
+
+            // 5. Stress Chart (Line)
+            new Chart(document.getElementById('stressChart').getContext('2d'), {
+                type: 'line', data: { labels: weeklyLabels, datasets: [{ label: '스트레스 지수', data: stressData.scores, borderColor: 'rgba(244, 114, 182, 0.8)', backgroundColor: 'rgba(244, 114, 182, 0.1)', fill: true, tension: 0.3, borderWidth: 2 }] },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 10, grid: { color: 'rgba(255, 255, 255, 0.1)' } }, x: { grid: { display: false } } }, plugins: { legend: { display: false }, datalabels: { display: false } } }
+            });
+        });
+    </script>
+</body>
+</html>
